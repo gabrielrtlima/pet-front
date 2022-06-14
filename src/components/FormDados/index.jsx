@@ -88,29 +88,21 @@ export const FormDados = (props) => {
     }
 
     const getUser = () => {
-        // axios.post(url+'/buscar', {
-        //     email: formDados.email
-        // }).then(res => {
-        //     console.log(res.data)
-        //     setInfoUsuario(res.data)
-        // }).catch(err => {
-        //     console.log(err.response.data)
-        // })
-
-        fetch(url+'/buscar', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: formDados.email
+        if(formDados.email !== ''){
+            axios.get(url+'/buscar', {
+                params: {
+                    email: formDados.email
+                }
+            }).then(res => {
+                console.log(res.data)
+                setInfoUsuario(res.data)
+            }).catch(err => {
+                console.log(err.response.data)
+                if(err.response.data.message === 'Usuario não encontrado'){
+                    alert('Usuário não encontrado')
+                }
             })
-        }).then(res => {
-            console.log(res)
-        }).catch(err => {
-            console.log(err)
-        })
-
+        }
 
     }
 
@@ -120,17 +112,13 @@ export const FormDados = (props) => {
                 {props.atualiza ? <h1>Atualize seus Dados!</h1> : <h1>Insira seus Dados!</h1>}
                 <h2>Dados Pessoais</h2>
                 <Input placeholder='Nome' onChange={handleNome} value={formDados.nome}/>
-                <Input placeholder='Email' onBlur={getUser} onChange={handleEmail} value={formDados.email}/>
+                <Input placeholder='Email' onChange={handleEmail} value={formDados.email}/>
                 <AlturaSexo>
                     <Altura>
                         <Input type={'number'} placeholder='Altura (cm)' onChange={handleAltura} value={formDados.altura}/>
                     </Altura>
                     <Sexo>
-                        {props.atualiza ? 
-                           <Input placeholder='Sexo' onChange={handleSexo} value={infoUsuario.sexo}/> :
-                           <Input placeholder='Sexo' onChange={handleSexo} value={formDados.sexo}/>
-                        }
-                           {infoUsuario.sexo}
+                        <Input placeholder='Sexo' onChange={handleSexo} value={formDados.sexo}/>
                     </Sexo>
                 </AlturaSexo>
                 <h2>Metas</h2>
